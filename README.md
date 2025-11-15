@@ -8,37 +8,33 @@
 ## Установка и запуск
 
 ### Установка
----
-1. Через poetry 
-
+```bash
+# Через poetry 
 poetry install
 
-2. Через make
-
+# Через make
 make install 
----
+```
 ### Запуск
-
-1. Через poetry
-
+```bash
+# Через poetry
 run poetry project
 
-2. Через make 
-
+# Через make 
 make project 
-
+```
 Убедитесь, что у вас установлены:
 Python 3.12
 Poetry и/или make
 
 ## Цель игры и процесс
-
+```
 * Исследовать комнаты лабиринта.
 * Собирать полезные предметы.
 * Решать загадки в комнатах.
 * Найти `treasure_key` или подсказку с кодом для замка и  использовать их для открытия сундука с сокровищами.
 * Игра завершается, когда игрок успешно открывает `treasure_chest` или вводит команду `quit`/`exit`.
-
+```
 ---
 
 ## Структура проекта
@@ -63,5 +59,5 @@ https://asciinema.org/connect/61316c14-6a5b-49b3-aa41-3950478abaf3
 
 ### Автор
 
-Ovsyannikov Seryge
+Ovsyannikov Sergey
 Email: [s.ovsyannikov@gmail.com]
