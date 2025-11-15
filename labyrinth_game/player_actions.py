@@ -1,5 +1,6 @@
 from labyrinth_game.constants import ROOMS
-from labyrinth_game.utils import describe_current_room
+from labyrinth_game.utils import describe_current_room, random_event
+
 
 def show_inventory(game_state):
     """
@@ -20,12 +21,30 @@ def move_player(game_state, direction):
     current_room = game_state['current_room']
     room_exits = ROOMS[current_room]['exits']
 
-    if direction in room_exits:
-        game_state['current_room'] = room_exits[direction]
-        game_state['steps'] = game_state.get('steps', 0) + 1
-        describe_current_room(game_state)  
-    else:
+
+    if direction not in room_exits:
         print("Нельзя пойти в этом направлении.")
+        return
+
+    next_room = room_exits[direction]
+
+    # проверка для treasure_room
+    if next_room == 'treasure_room':
+        if 'rusty_key' in game_state['player_inventory']:
+            print("Вы используете найденный ключ, чтобы открыть путь в комнату сокровищ.")
+            game_state['current_room'] = next_room
+            game_state['steps'] += 1
+            describe_current_room(game_state)
+            random_event(game_state)  
+        else:
+            print("Дверь заперта. Нужен ключ, чтобы пройти дальше.")
+        return
+
+    # обычный перемещение
+    game_state['current_room'] = next_room
+    game_state['steps'] += 1
+    describe_current_room(game_state)
+    random_event(game_state)  
 
 def take_item(game_state, item_name):
     """
@@ -51,7 +70,7 @@ def use_item(game_state, item_name):
         print("У вас нет такого предмета.")
         return
 
-    # Логика использования предметов
+    # логика использования предметов
     if item_name == 'torch':
         print("Стало светлее. Вы видите больше деталей вокруг.")
     elif item_name == 'sword':

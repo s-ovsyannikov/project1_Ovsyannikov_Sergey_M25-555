@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-from labyrinth_game.utils import describe_current_room, solve_puzzle, attempt_open_treasure
-from labyrinth_game.player_actions import show_inventory, get_input, take_item, move_player, use_item
-from labyrinth_game.constants import ROOMS
-
+from labyrinth_game.constants import COMMANDS
+from labyrinth_game.player_actions import get_input, move_player, show_inventory, take_item, use_item
+from labyrinth_game.utils import attempt_open_treasure, describe_current_room, solve_puzzle
 
 game_state = {
         'player_inventory': [], # Инвентарь игрока
@@ -11,6 +10,13 @@ game_state = {
         'game_over': False, # Значения окончания игры
         'steps_taken': 0 # Количество шагов
   }
+
+def show_help(commands):
+    """Выводит список доступных команд."""
+    print("\nДоступные команды:")
+    for cmd, desc in commands.items():
+        print(f"{cmd:<16} — {desc}")
+
 
 def process_command(game_state, command):
     """
@@ -21,6 +27,9 @@ def process_command(game_state, command):
     arg = parts[1] if len(parts) > 1 else None
 
     match action:
+        case "help":
+            show_help(COMMANDS)
+
         case "look":
             describe_current_room(game_state)
 
@@ -66,7 +75,7 @@ def process_command(game_state, command):
 
 
 def main():
-    # Инициализация состояния игры
+    # инициализация состояния игры
     game_state = {
         'current_room': 'entrance',
         'player_inventory': [],
@@ -77,7 +86,7 @@ def main():
     print("Добро пожаловать в Лабиринт сокровищ!")
     describe_current_room(game_state)
 
-    # Игровой цикл
+    # игровой цикл
     while not game_state['game_over']:
         command = get_input("> ")
         
@@ -86,9 +95,9 @@ def main():
             break
 
         if not process_command(game_state, command):
-            break  # Выход по команде quit/exit
+            break  # dыход по команде quit/exit
 
-        # Дополнительная проверка на победу после каждой команды
+        # проверка на победу после каждой команды
         if game_state['game_over']:
             break
 
