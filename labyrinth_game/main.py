@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from labyrinth_game.utils import describe_current_room
+from labyrinth_game.utils import describe_current_room, solve_puzzle, attempt_open_treasure
 from labyrinth_game.player_actions import show_inventory, get_input, take_item, move_player, use_item
 from labyrinth_game.constants import ROOMS
 
@@ -15,7 +15,6 @@ game_state = {
 def process_command(game_state, command):
     """
     Обрабатывает команду пользователя.
-    Разделяет команду и аргумент, выполняет запрошенное действие.
     """
     parts = command.split()
     action = parts[0] if parts else ""
@@ -46,54 +45,52 @@ def process_command(game_state, command):
             else:
                 print("Укажите предмет, который хотите использовать.")
 
+        case "solve":
+            solve_puzzle(game_state)
+            # После решения загадки проверяем, можно ли открыть сундук
+            if game_state['current_room'] == 'treasure_room':
+                attempt_open_treasure(game_state)
+
         case "quit" | "exit":
             print("Игра окончена.")
-            return False  # Флаг для завершения цикла
+            return False
 
         case _:
             print(
                 "Неизвестная команда. Доступные команды: "
                 "look, go <направление>, take <предмет>, "
-                "use <предмет>, inventory, quit/exit."
+                "use <предмет>, inventory, solve, quit/exit."
             )
 
-    return True  # Продолжать игру
+    return True  
 
 
 def main():
-    """Начало игры"""
+    # Инициализация состояния игры
     game_state = {
         'current_room': 'entrance',
-        'player_inventory': []
+        'player_inventory': [],
+        'steps': 0,
+        'game_over': False
     }
 
     print("Добро пожаловать в Лабиринт сокровищ!")
-
-    """ Основной игровой цикл """
-
-    # Описание стартовой комнаты
     describe_current_room(game_state)
 
     # Игровой цикл
-    while True:  
+    while not game_state['game_over']:
         command = get_input("> ")
-
-        if command == "quit":
+        
+        if command in ("quit", "exit"):
             print("Игра окончена.")
             break
 
-        elif command == "look":
-            describe_current_room(game_state)
+        if not process_command(game_state, command):
+            break  # Выход по команде quit/exit
 
-        elif command == "inventory":
-            show_inventory(game_state)
-
-        else:
-            print("Неизвестная команда. Доступные команды: look, inventory, quit.")
-
-
-
-
+        # Дополнительная проверка на победу после каждой команды
+        if game_state['game_over']:
+            break
 
 
 if __name__ == "__main__":

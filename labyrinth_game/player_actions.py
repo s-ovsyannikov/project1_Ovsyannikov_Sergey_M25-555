@@ -12,17 +12,7 @@ def show_inventory(game_state):
     else:
         print("Инвентарь пуст.")
 
-
-def get_input(prompt="> "):
-    """
-    Считывает ввод пользователя с обработкой прерываний
-    """
-    try:
-        return input(prompt).strip().lower()
-    except (KeyboardInterrupt, EOFError):
-        print("\nВыход из игры.")
-        return "quit"
-    
+  
 def move_player(game_state, direction):
     """
     Перемещение игрока в выбранном направлении (если существует такая возможность) 
@@ -74,3 +64,13 @@ def use_item(game_state, item_name):
             print("Шкатулка уже открыта, внутри пусто.")
     else:
         print(f"Вы не знаете, как использовать {item_name}.")
+
+def get_input(prompt="> "):
+    """
+    Считывает ввод пользователя с обработкой прерываний
+    """
+    try:
+        return input(prompt).strip().lower()
+    except (KeyboardInterrupt, EOFError):
+        print("\nВыход из игры.")
+        return "quit"
